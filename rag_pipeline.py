@@ -83,7 +83,6 @@ class RAGPipeline:
         response = self.llm_client.messages.create(
             model=config.LLM_MODEL,
             max_tokens=config.LLM_MAX_TOKENS,
-            temperature=config.LLM_TEMPERATURE,
             system=SYSTEM_PROMPT,
             messages=[
                 {
