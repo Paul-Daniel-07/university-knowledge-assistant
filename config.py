@@ -28,5 +28,5 @@ TOP_K = 4                 # number of chunks retrieved per query
 # Uses the Anthropic API. Set ANTHROPIC_API_KEY in a .env file (see .env.example).
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 LLM_MODEL = "claude-sonnet-5"
-LLM_MAX_TOKENS 
+LLM_MAX_TOKENS = 1024
  # low temperature: answers should stay grounded, not creative
