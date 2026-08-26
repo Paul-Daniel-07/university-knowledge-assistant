@@ -57,6 +57,22 @@ st.markdown("""
     }
     section[data-testid="stSidebar"] hr { border-color: var(--navy-light); }
 
+    /* File uploader dropzone — match the navy sidebar instead of default white */
+    section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"],
+    section[data-testid="stSidebar"] .stFileUploader section {
+        background-color: var(--navy-light) !important;
+        border: 1.5px dashed var(--brass) !important;
+        border-radius: 6px !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] * {
+        color: #F2EFE8 !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] button {
+        background-color: var(--brass) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+    }
+
     /* Chat bubbles */
     .stChatMessage {
         border-radius: 6px;
