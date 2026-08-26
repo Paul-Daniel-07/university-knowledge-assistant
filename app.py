@@ -109,8 +109,36 @@ st.markdown("""
     .kb-status-ok { color: #2F6B45; font-weight: 600; font-family: 'Inter', sans-serif; }
     .kb-status-missing { color: #A13B3B; font-weight: 600; font-family: 'Inter', sans-serif; }
 
-    /* Chat input */
-    [data-testid="stChatInput"] { border-color: var(--hairline) !important; }
+    /* Chat input — distinctive parchment card with brass focus glow */
+    [data-testid="stChatInput"] {
+        border: 1.5px solid var(--hairline) !important;
+        border-radius: 10px !important;
+        background-color: #FFFDF8 !important;
+        box-shadow: 0 1px 3px rgba(20, 33, 61, 0.06) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    [data-testid="stChatInput"]:focus-within {
+        border-color: var(--brass) !important;
+        box-shadow: 0 0 0 3px rgba(176, 138, 62, 0.18) !important;
+    }
+    [data-testid="stChatInput"] textarea {
+        font-family: 'Inter', sans-serif !important;
+        color: var(--ink) !important;
+    }
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: var(--ink-muted) !important;
+        font-style: italic;
+    }
+    [data-testid="stChatInput"] button {
+        background-color: var(--brass) !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stChatInput"] button:hover {
+        background-color: var(--brass-dark) !important;
+    }
+    [data-testid="stChatInput"] button svg {
+        fill: #FFFFFF !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
