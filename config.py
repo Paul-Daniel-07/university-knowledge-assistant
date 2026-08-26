@@ -38,6 +38,6 @@ if not GOOGLE_API_KEY:
         GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY", "")
     except Exception:
         pass  # not running under Streamlit, or no secrets configured — stays ""
-LLM_MODEL = "gemini-2.5-flash"   # free-tier eligible
+LLM_MODEL = "gemini-3.6-flash"   # free-tier eligible
 LLM_MAX_TOKENS = 1024
 LLM_TEMPERATURE = 0.2      # low temperature: answers should stay grounded, not creative
