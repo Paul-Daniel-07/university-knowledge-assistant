@@ -20,29 +20,81 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
-# Styling
+# Styling — academic design system: navy + parchment + brass, serif headings
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
-    .main { background-color: #FAFAF9; }
-    .stChatMessage { border-radius: 10px; }
+    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+        --navy: #14213D;
+        --navy-light: #1E2F52;
+        --parchment: #FAF7F2;
+        --card: #FFFFFF;
+        --brass: #B08A3E;
+        --brass-dark: #8C6D2F;
+        --ink: #1F2430;
+        --ink-muted: #64605A;
+        --hairline: #E4DFD3;
+    }
+
+    .stApp { background-color: var(--parchment); }
+    .main { background-color: var(--parchment); }
+
+    h1, h2, h3 { font-family: 'Lora', Georgia, serif !important; color: var(--navy); letter-spacing: -0.01em; }
+    h1 { font-weight: 700 !important; border-bottom: 2px solid var(--brass); padding-bottom: 0.4rem; display: inline-block; }
+    body, p, div, span, li { font-family: 'Inter', -apple-system, sans-serif; color: var(--ink); }
+    .stCaption, [data-testid="stCaptionContainer"] { font-family: 'Inter', sans-serif !important; color: var(--ink-muted) !important; }
+
+    /* Sidebar: deep navy, cream text */
+    section[data-testid="stSidebar"] {
+        background-color: var(--navy);
+        border-right: 1px solid var(--navy-light);
+    }
+    section[data-testid="stSidebar"] * { color: #F2EFE8 !important; }
+    section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+        font-family: 'Lora', serif !important; color: #FFFFFF !important;
+    }
+    section[data-testid="stSidebar"] hr { border-color: var(--navy-light); }
+
+    /* Chat bubbles */
+    .stChatMessage {
+        border-radius: 6px;
+        border: 1px solid var(--hairline);
+        background-color: var(--card);
+    }
+
+    /* Buttons: brass accent, not generic purple */
+    .stButton > button, .stFormSubmitButton > button {
+        background-color: var(--brass) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 4px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 600 !important;
+    }
+    .stButton > button:hover { background-color: var(--brass-dark) !important; }
+
+    /* Source citation pills — brass-on-parchment, not blue */
     .source-pill {
         display: inline-block;
-        background: #EEF2FF;
-        color: #3730A3;
-        border-radius: 999px;
-        padding: 2px 12px;
+        background: #F1E8D4;
+        color: var(--brass-dark);
+        border-radius: 4px;
+        padding: 2px 10px;
         font-size: 0.78rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
         margin: 2px 6px 2px 0;
-        border: 1px solid #C7D2FE;
+        border: 1px solid #DDCBA3;
     }
-    .relevance-tag {
-        color: #6B7280;
-        font-size: 0.75rem;
-    }
-    h1 { letter-spacing: -0.02em; }
-    .kb-status-ok { color: #15803D; font-weight: 600; }
-    .kb-status-missing { color: #B91C1C; font-weight: 600; }
+    .relevance-tag { color: var(--ink-muted); font-size: 0.75rem; font-family: 'Inter', sans-serif; }
+
+    .kb-status-ok { color: #2F6B45; font-weight: 600; font-family: 'Inter', sans-serif; }
+    .kb-status-missing { color: #A13B3B; font-weight: 600; font-family: 'Inter', sans-serif; }
+
+    /* Chat input */
+    [data-testid="stChatInput"] { border-color: var(--hairline) !important; }
 </style>
 """, unsafe_allow_html=True)
 
