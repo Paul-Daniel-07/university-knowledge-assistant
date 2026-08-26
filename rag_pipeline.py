@@ -8,7 +8,8 @@ sources used.
 """
 import chromadb
 from sentence_transformers import SentenceTransformer
-from anthropic import Anthropic
+from google import genai
+from google.genai import types
 
 import config
 
@@ -36,7 +37,7 @@ class RAGPipeline:
             raise RuntimeError(
                 "Knowledge base not found. Run `python ingest.py` first to build it."
             )
-        self.llm_client = Anthropic(api_key=config.ANTHROPIC_API_KEY) if config.ANTHROPIC_API_KEY else None
+        self.llm_client = genai.Client(api_key=config.GOOGLE_API_KEY) if config.GOOGLE_API_KEY else None
 
     # -- Retrieval -----------------------------------------------------
     def retrieve(self, question: str, top_k: int = None):
@@ -75,23 +76,21 @@ class RAGPipeline:
         if self.llm_client is None:
             # No API key configured -> return context directly so the app still works.
             return (
-                "(LLM not configured — set ANTHROPIC_API_KEY in .env to enable grounded "
+                "(LLM not configured — set GOOGLE_API_KEY in .env to enable grounded "
                 "answers. Showing the most relevant retrieved passage instead.)\n\n"
                 + retrieved_chunks[0]["text"]
             )
 
-        response = self.llm_client.messages.create(
+        response = self.llm_client.models.generate_content(
             model=config.LLM_MODEL,
-            max_tokens=config.LLM_MAX_TOKENS,
-            system=SYSTEM_PROMPT,
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Context:\n{context_block}\n\nQuestion: {question}",
-                }
-            ],
+            contents=f"Context:\n{context_block}\n\nQuestion: {question}",
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                max_output_tokens=config.LLM_MAX_TOKENS,
+                temperature=config.LLM_TEMPERATURE,
+            ),
         )
-        return response.content[0].text
+        return response.text
 
     # -- Full pipeline ---------------------------------------------------
     def answer(self, question: str, top_k: int = None) -> dict:
