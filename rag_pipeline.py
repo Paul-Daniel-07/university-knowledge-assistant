@@ -64,7 +64,7 @@ class RAGPipeline:
             })
         return retrieved
 
-          def generate_answer(self, question: str, retrieved_chunks: list[dict]) -> str:
+    def generate_answer(self, question: str, retrieved_chunks: list[dict]) -> str:
         if not retrieved_chunks:
             return "I couldn't find this in the available university documents."
 
