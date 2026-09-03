@@ -12,6 +12,7 @@ from google import genai
 from google.genai import types
 
 import config
+from google.genai.errors import ServerError, ClientError
 
 
 SYSTEM_PROMPT = """You are the University Knowledge Assistant. You answer student
@@ -63,8 +64,7 @@ class RAGPipeline:
             })
         return retrieved
 
-    # -- Generation ------------------------------------------------------
-    def generate_answer(self, question: str, retrieved_chunks: list[dict]) -> str:
+          def generate_answer(self, question: str, retrieved_chunks: list[dict]) -> str:
         if not retrieved_chunks:
             return "I couldn't find this in the available university documents."
 
@@ -74,23 +74,38 @@ class RAGPipeline:
         )
 
         if self.llm_client is None:
-            # No API key configured -> return context directly so the app still works.
             return (
                 "(LLM not configured — set GOOGLE_API_KEY in .env to enable grounded "
                 "answers. Showing the most relevant retrieved passage instead.)\n\n"
                 + retrieved_chunks[0]["text"]
             )
 
-        response = self.llm_client.models.generate_content(
-            model=config.LLM_MODEL,
-            contents=f"Context:\n{context_block}\n\nQuestion: {question}",
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                max_output_tokens=config.LLM_MAX_TOKENS,
-                temperature=config.LLM_TEMPERATURE,
-            ),
+        gen_config = types.GenerateContentConfig(
+            system_instruction=SYSTEM_PROMPT,
+            max_output_tokens=config.LLM_MAX_TOKENS,
+            temperature=config.LLM_TEMPERATURE,
         )
-        return response.text
+        prompt = f"Context:\n{context_block}\n\nQuestion: {question}"
+
+        try:
+            response = self.llm_client.models.generate_content(
+                model=config.LLM_MODEL, contents=prompt, config=gen_config,
+            )
+            return response.text
+        except ServerError:
+            try:
+                response = self.llm_client.models.generate_content(
+                    model="gemini-3.1-flash-lite", contents=prompt, config=gen_config,
+                )
+                return response.text
+            except ServerError:
+                return (
+                    "⚠️ Gemini is temporarily overloaded on Google's side. "
+                    "Please wait a few seconds and try again.\n\n"
+                    f"Meanwhile, here's the most relevant passage found:\n\n{retrieved_chunks[0]['text']}"
+                )
+        except ClientError as e:
+            return f"⚠️ There was a problem calling the Gemini API: {e}"
 
     # -- Full pipeline ---------------------------------------------------
     def answer(self, question: str, top_k: int = None) -> dict:
